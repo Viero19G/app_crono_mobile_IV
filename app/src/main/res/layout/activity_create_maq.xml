@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".createMaq">
+
+    <EditText
+        android:id="@+id/deesc_maq"
+        android:layout_width="307dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="80dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Descrição"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nome_maq" />
+
+    <Button
+        android:id="@+id/send_maq"
+        android:layout_width="153dp"
+        android:layout_height="73dp"
+        android:layout_marginTop="48dp"
+        android:text="enviar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deesc_maq"
+        app:layout_constraintVertical_bias="0.769"
+        tools:layout_editor_absoluteX="223dp"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/nome_maq"
+        android:layout_width="303dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="144dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Nome da Maquina"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
