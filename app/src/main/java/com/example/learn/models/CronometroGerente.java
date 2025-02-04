@@ -1,17 +1,37 @@
 package com.example.learn.models;
 
-public class Cronometro {
+public class CronometroGerente {
 
     private boolean rodando;
     private int segundos;
     private int segundos_total;
+    private int id_sp;
+    private int id_tx;
 
-    public Cronometro(){
+
+
+    public CronometroGerente(){
     }
-    public Cronometro(boolean rodando, int segundos, int segundos_total) {
+    public CronometroGerente(boolean rodando, int segundos, int segundos_total) {
         this.rodando = rodando;
         this.segundos = segundos;
         this.segundos_total = segundos_total;
+    }
+
+    public int getId_sp() {
+        return id_sp;
+    }
+
+    public void setId_sp(int id_sp) {
+        this.id_sp = id_sp;
+    }
+
+    public int getId_tx() {
+        return id_tx;
+    }
+
+    public void setId_tx(int id_tx) {
+        this.id_tx = id_tx;
     }
 
     public boolean isRodando() {

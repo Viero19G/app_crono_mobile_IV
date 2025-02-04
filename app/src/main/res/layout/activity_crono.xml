@@ -5,14 +5,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
-        android:layout_width="168dp"
+        android:id="@+id/dataInicio"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Data Hora Inicio" />
+
+    <EditText
+        android:id="@+id/dataFim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Data Hora Fim" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -28,7 +41,7 @@
         android:id="@+id/spPost"
         style="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar"
         android:layout_width="match_parent"
-        android:layout_height="53dp" />
+        android:layout_height="42dp" />
 
     <TextView
         android:id="@+id/textView3"
@@ -39,28 +52,25 @@
     <Spinner
         android:id="@+id/spMaq"
         android:layout_width="match_parent"
-        android:layout_height="53dp"
+        android:layout_height="38dp"
         tools:ignore="SpeakableTextPresentCheck" />
     <!-- Lista de Operações com Tempo -->
 
     <!-- Botão Próximo -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerOperacoes"
-        android:layout_width="377dp"
-        android:layout_height="367dp"
-        android:background="#72FFFFFF" />
 
 
-    <Button
-        android:id="@+id/btnProximo"
-        android:layout_width="359dp"
-        android:layout_height="65dp"
-        android:text="Próxima Operação" />
+    <LinearLayout
+        android:id="@+id/linear_op"
+        android:layout_width="375dp"
+        android:layout_height="331dp">
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        >
 
         <Button
             android:id="@+id/btn_InitC"
@@ -80,5 +90,11 @@
             android:layout_height="match_parent"
             android:text="ENVIAR" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnProximo"
+        android:layout_width="359dp"
+        android:layout_height="65dp"
+        android:text="Próxima Operação" />
 
 </LinearLayout>
