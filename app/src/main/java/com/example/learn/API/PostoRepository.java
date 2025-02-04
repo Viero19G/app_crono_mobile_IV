@@ -16,6 +16,7 @@ import retrofit2.Response;
 public class PostoRepository {
     private final ApiService apiService;
     private final DatabaseHelper dbHelper;
+    SyncManager sm;
 
     public PostoRepository(Context context) {
         apiService = RetrofitClient.getApiService();
@@ -71,5 +72,6 @@ public class PostoRepository {
                 criarPostoComReenvio(postoTrabalho, tentativas - 1);
             }
         });
+        sm.syncDB();
     }
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="168dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Data Hora Inicio" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"/>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="376dp"
+        android:layout_height="wrap_content"
+        android:text="Selecione o posto de trabalho:" />
+
+    <Spinner
+        android:id="@+id/spPost"
+        style="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="53dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selecione a maquina:" />
+
+    <Spinner
+        android:id="@+id/spMaq"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+    <!-- Lista de Operações com Tempo -->
+
+    <!-- Botão Próximo -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerOperacoes"
+        android:layout_width="377dp"
+        android:layout_height="367dp"
+        android:background="#72FFFFFF" />
+
+
+    <Button
+        android:id="@+id/btnProximo"
+        android:layout_width="359dp"
+        android:layout_height="65dp"
+        android:text="Próxima Operação" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_InitC"
+            android:layout_width="109dp"
+            android:layout_height="wrap_content"
+            android:text="INICIAR" />
+
+        <Button
+            android:id="@+id/btnParar"
+            android:layout_width="113dp"
+            android:layout_height="match_parent"
+            android:text="Parar" />
+
+        <Button
+            android:id="@+id/btnEnviar"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:text="ENVIAR" />
+    </LinearLayout>
+
+</LinearLayout>

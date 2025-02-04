@@ -15,6 +15,7 @@ import retrofit2.Response;
 public class MaquinaRepository {
     private final ApiService apiService;
     private final DatabaseHelper dbHelper;
+    SyncManager sm;
 
     public MaquinaRepository(Context context) {
         apiService = RetrofitClient.getApiService();
@@ -67,6 +68,9 @@ public class MaquinaRepository {
                 Log.e("API", "Falha na requisição: " + t.getMessage() + ". Tentando novamente... (" + tentativas + " restantes)");
                 criarMaquinaComReenvio(maquina, tentativas - 1);
             }
+
+
         });
+        sm.syncDB();
     }
 }

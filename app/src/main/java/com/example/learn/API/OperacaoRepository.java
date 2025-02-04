@@ -18,6 +18,7 @@ public class OperacaoRepository {
 
     private final ApiService apiService;
     private final DatabaseHelper dbHelper;
+    SyncManager sm;
 
     public OperacaoRepository(Context context) {
         apiService = RetrofitClient.getApiService();
@@ -72,6 +73,7 @@ public class OperacaoRepository {
                 criarOperacaoComReenvio(operacao, tentativas - 1);
             }
         });
+        sm.syncDB();
     }
 
 }
