@@ -1,10 +1,11 @@
 package com.example.learn.database;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -12,6 +13,8 @@ import androidx.annotation.Nullable;
 import com.example.learn.models.Maquina;
 import com.example.learn.models.Operacao;
 import com.example.learn.models.PostoTrabalho;
+
+import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
@@ -151,6 +154,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void inserirPosto(PostoTrabalho posto) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(ID_POSTO, posto.getId());
         values.put(NOME_POSTO, posto.getNome());
         values.put(DESC_POSTO, posto.getDescricao());
 
@@ -207,6 +211,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void inserirMaquina(Maquina maquina) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(ID_MAQUINA, maquina.getId());
         values.put(NOME_MAQUINA, maquina.getNome());
         values.put(DESC_MAQUINA, maquina.getDescricao());
 
@@ -217,11 +222,79 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void inserirOperacoes(Operacao op) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(ID_OPERACAO, op.getId());
         values.put(NOME_OPERACAO, op.getNome());
         values.put(DESC_OPERACAO, op.getDescricao());
         values.put(CLAS_OPERACAO, op.getClassificacao());
 
         db.insertWithOnConflict(TABELA_OPERACAO, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         db.close();
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<String> getOperacores(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM "+ TABELA_OPERACAO + ";" ;
+        ArrayList<String> dados = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while(cursor.moveToNext()){
+            dados.add(cursor.getString(cursor.getColumnIndex("nome")));
+        }
+        return dados;
+    }
+    @SuppressLint("Range")
+    public ArrayList<Integer> getOperacoresIds(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM "+ TABELA_OPERACAO + ";" ;
+        ArrayList<Integer> dados = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while(cursor.moveToNext()){
+            dados.add(cursor.getInt(cursor.getColumnIndex("_id")));
+        }
+        return dados;
+    }
+    @SuppressLint("Range")
+    public ArrayList<String> getMaquinas(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM "+ TABELA_MAQUINA + ";" ;
+        ArrayList<String> dados = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while(cursor.moveToNext()){
+            dados.add(cursor.getString(cursor.getColumnIndex("nome")));
+        }
+        return dados;
+    }
+    @SuppressLint("Range")
+    public ArrayList<Integer> getMaquinasIds(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM "+ TABELA_MAQUINA + ";" ;
+        ArrayList<Integer> dados = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while(cursor.moveToNext()){
+            dados.add(cursor.getInt(cursor.getColumnIndex("_id")));
+        }
+        return dados;
+    }
+    @SuppressLint("Range")
+    public ArrayList<String> getPosto(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM "+ TABELA_POSTO + ";" ;
+        ArrayList<String> dados = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while(cursor.moveToNext()){
+            dados.add(cursor.getString(cursor.getColumnIndex("nome")));
+        }
+        return dados;
+    }
+    @SuppressLint("Range")
+    public ArrayList<Integer> getPostoIds() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABELA_POSTO + ";";
+        ArrayList<Integer> dados = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            dados.add(cursor.getInt(cursor.getColumnIndex("_id")));
+        }
+        return dados;
     }
 }

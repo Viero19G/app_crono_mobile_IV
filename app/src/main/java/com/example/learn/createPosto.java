@@ -25,7 +25,6 @@ public class createPosto extends AppCompatActivity {
         nome_posto = findViewById(R.id.nome_posto);
         desc_posto = findViewById(R.id.deesc_posto);
         send_posto = findViewById(R.id.send_posto);
-
         send_posto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

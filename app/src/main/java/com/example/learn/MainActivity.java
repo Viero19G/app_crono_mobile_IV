@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Inicializar DatabaseHelper
         dbHelp = new DatabaseHelper(this);
-
         // Inicializar SyncManager
         sm = new SyncManager(this);
 

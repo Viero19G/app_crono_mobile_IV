@@ -3,7 +3,7 @@ package com.example.learn.models;
 public class CronometroGerente {
 
     private boolean rodando;
-    private int segundos;
+    private int segundos = 0;
     private int segundos_total;
     private int id_sp;
     private int id_tx;

@@ -1,9 +1,11 @@
 package com.example.learn.API;
 
 
+import com.example.learn.models.Atividade;
 import com.example.learn.models.Maquina;
 import com.example.learn.models.Operacao;
 import com.example.learn.models.PostoTrabalho;
+import com.example.learn.responses.AtividadesResponse;
 import com.example.learn.responses.MaquinaResponse;
 import com.example.learn.responses.OperacaoResponse;
 import com.example.learn.responses.PostoResponse;
@@ -28,6 +30,7 @@ public interface ApiService {
 
     @GET("maquinas/maquinalist/")
     Call<MaquinaResponse> getMaquinas();
+
     @POST("maquinas/maquinacreate/")
     Call<MaquinaResponse> criarMaquina(@Body Maquina maquina);
 
@@ -37,7 +40,8 @@ public interface ApiService {
     @POST("operacoes/operacaocreate/")
     Call<OperacaoResponse> criarOperacao(@Body Operacao operacao);
 
-
+    @POST("atividades/")
+    Call<AtividadesResponse> criarAtividade(@Body Atividade atividade);
 
 
 }
