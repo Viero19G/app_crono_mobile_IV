@@ -2,10 +2,12 @@ package com.example.learn.API;
 
 
 import com.example.learn.models.Atividade;
+import com.example.learn.models.Classificacao;
 import com.example.learn.models.Maquina;
 import com.example.learn.models.Operacao;
 import com.example.learn.models.PostoTrabalho;
 import com.example.learn.responses.AtividadesResponse;
+import com.example.learn.responses.ClassificacaoResponse;
 import com.example.learn.responses.MaquinaResponse;
 import com.example.learn.responses.OperacaoResponse;
 import com.example.learn.responses.PostoResponse;
@@ -27,6 +29,13 @@ public interface ApiService {
     // POST: Envia uma nova atividade para a API
     @POST("postos/postocreate/")
     Call<PostoResponse> criarPosto(@Body PostoTrabalho postoTrabalho);
+
+    @GET("classificacoes/classificacaolist/")
+    Call<ClassificacaoResponse> getClassificacao();
+
+    // POST: Envia uma nova atividade para a API
+    @POST("classificacoes/classificacaocreate/")
+    Call<ClassificacaoResponse> criarClassificacao(@Body Classificacao classificacao);
 
     @GET("maquinas/maquinalist/")
     Call<MaquinaResponse> getMaquinas();

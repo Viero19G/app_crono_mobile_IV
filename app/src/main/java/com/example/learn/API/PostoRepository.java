@@ -17,13 +17,15 @@ public class PostoRepository {
     private final ApiService apiService;
     private final DatabaseHelper dbHelper;
     SyncManager sm;
+    Context context;
 
     public PostoRepository(Context context) {
+        this.context = context;  // ADICIONE ESTA LINHA
         apiService = RetrofitClient.getApiService();
         dbHelper = new DatabaseHelper(context);
     }
 
-    public void sincronizarPostos() {
+    public void sincronizarPostos(Runnable onSyncComplete) {
         apiService.getPostos().enqueue(new Callback<PostoResponse>() {
             @Override
             public void onResponse(Call<PostoResponse> call, Response<PostoResponse> response) {
@@ -33,14 +35,17 @@ public class PostoRepository {
                         dbHelper.inserirPosto(posto);
                     }
                 }
+                onSyncComplete.run();
             }
 
             @Override
             public void onFailure(Call<PostoResponse> call, Throwable t) {
                 Log.e("API", "Erro ao buscar postos: " + t.getMessage());
+                onSyncComplete.run();
             }
         });
     }
+
 
 
     public void criarPostoComReenvio(final PostoTrabalho postoTrabalho, final int tentativas) {
@@ -72,6 +77,6 @@ public class PostoRepository {
                 criarPostoComReenvio(postoTrabalho, tentativas - 1);
             }
         });
-        sm.syncDB();
+
     }
 }

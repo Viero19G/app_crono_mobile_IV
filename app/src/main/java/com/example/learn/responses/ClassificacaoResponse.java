@@ -1,6 +1,6 @@
 package com.example.learn.responses;
 
-import com.example.learn.models.Maquina;
+import com.example.learn.models.Classificacao;
 import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaquinaResponse {
+public class ClassificacaoResponse {
     @SerializedName("message")
     private String message;
 
@@ -17,16 +17,16 @@ public class MaquinaResponse {
     private String error;
 
     @SerializedName("data")
-    private List<Maquina> data;
+    private List<Classificacao> data;
 
     public String getMessage() { return message; }
     public String getError() { return error; }
-    public List<Maquina> getData() { return data; }
+    public List<Classificacao> getData() { return data; }
 
-    public static class MaquinaResponseDeserializer implements JsonDeserializer<MaquinaResponse> {
+    public static class ClassificacaoResponseDeserializer implements JsonDeserializer<ClassificacaoResponse> {
         @Override
-        public MaquinaResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            MaquinaResponse response = new MaquinaResponse();
+        public ClassificacaoResponse deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            ClassificacaoResponse response = new ClassificacaoResponse();
             JsonObject jsonObject = json.getAsJsonObject();
 
             if (jsonObject.has("message")) {
@@ -39,10 +39,10 @@ public class MaquinaResponse {
                 JsonElement dataElement = jsonObject.get("data");
 
                 if (dataElement.isJsonArray()) {
-                    response.data = new Gson().fromJson(dataElement, new TypeToken<List<Maquina>>() {}.getType());
+                    response.data = new Gson().fromJson(dataElement, new TypeToken<List<Classificacao>>() {}.getType());
                 } else if (dataElement.isJsonObject()) {
                     response.data = new ArrayList<>();
-                    response.data.add(new Gson().fromJson(dataElement, Maquina.class));
+                    response.data.add(new Gson().fromJson(dataElement, Classificacao.class));
                 }
             }
             return response;

@@ -11,6 +11,7 @@ import android.widget.EditText;
 //import com.example.learn.API.ApiService;
 
 import com.example.learn.API.PostoRepository;
+import com.example.learn.API.SyncManager;
 import com.example.learn.database.DatabaseHelper;
 import com.example.learn.models.PostoTrabalho;
 
@@ -18,10 +19,18 @@ public class createPosto extends AppCompatActivity {
     EditText nome_posto, desc_posto;
     Button send_posto;
     Context context;
+    SyncManager sm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_posto);
+        sm = new SyncManager(createPosto.this);
+        sm.syncDB(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });
         nome_posto = findViewById(R.id.nome_posto);
         desc_posto = findViewById(R.id.deesc_posto);
         send_posto = findViewById(R.id.send_posto);
@@ -30,7 +39,7 @@ public class createPosto extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseHelper dbHelp= new DatabaseHelper(createPosto.this);
                // ApiService api = new ApiService();
-                dbHelp.addMaquina(nome_posto.getText().toString().trim(),
+                dbHelp.addPosto(nome_posto.getText().toString().trim(),
                         desc_posto.getText().toString().trim());
                 PostoRepository repo = new PostoRepository(context);
                 PostoTrabalho novaPosto = new PostoTrabalho(nome_posto.getText().toString(), desc_posto.getText().toString());

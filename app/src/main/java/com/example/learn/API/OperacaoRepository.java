@@ -19,13 +19,15 @@ public class OperacaoRepository {
     private final ApiService apiService;
     private final DatabaseHelper dbHelper;
     SyncManager sm;
+    Context context;
 
     public OperacaoRepository(Context context) {
+        this.context = context;  // ADICIONE ESTA LINHA
         apiService = RetrofitClient.getApiService();
         dbHelper = new DatabaseHelper(context);
     }
 
-    public void sincronizarOperacoes() {
+    public void sincronizarOperacoes(Runnable onSyncComplete) {
         apiService.getOperacao().enqueue(new Callback<OperacaoResponse>() {
             @Override
             public void onResponse(Call<OperacaoResponse> call, Response<OperacaoResponse> response) {
@@ -35,18 +37,21 @@ public class OperacaoRepository {
                         dbHelper.inserirOperacoes(operacao);
                     }
                 }
+                onSyncComplete.run();
             }
 
             @Override
             public void onFailure(Call<OperacaoResponse> call, Throwable t) {
-                Log.e("API", "Erro ao buscar postos: " + t.getMessage());
+                Log.e("API", "Erro ao buscar operações: " + t.getMessage());
+                onSyncComplete.run();
             }
         });
     }
 
+
     public void criarOperacaoComReenvio(final Operacao operacao, final int tentativas) {
         if (tentativas <= 0) {
-            Log.e("API", "Operacao não pôde ser criada após múltiplas tentativas.");
+            Log.e("API", "Operação não pôde ser criada após múltiplas tentativas.");
             return;
         }
 
@@ -55,8 +60,8 @@ public class OperacaoRepository {
             public void onResponse(Call<OperacaoResponse> call, Response<OperacaoResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     OperacaoResponse resposta = response.body();
-                    if ("OPeracao criada com sucesso!".equals(resposta.getMessage())) {
-                        Log.i("API", "Operacao criada: " + resposta.getData().toString());
+                    if ("Operacao criada com sucesso!".equalsIgnoreCase(resposta.getMessage())) {
+                        Log.i("API", "Operação criada: " + resposta.getData());
                     } else {
                         Log.w("API", "Resposta inesperada, reenviando... (" + tentativas + " restantes)");
                         criarOperacaoComReenvio(operacao, tentativas - 1);
@@ -73,7 +78,7 @@ public class OperacaoRepository {
                 criarOperacaoComReenvio(operacao, tentativas - 1);
             }
         });
-        sm.syncDB();
+
     }
 
 }

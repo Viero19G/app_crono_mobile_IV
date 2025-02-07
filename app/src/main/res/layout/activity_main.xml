@@ -31,9 +31,9 @@
         android:id="@+id/sync"
         android:layout_width="308dp"
         android:layout_height="71dp"
-        android:layout_marginStart="40dp"
         android:layout_marginTop="36dp"
         android:text="Sincronizar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,29 +41,45 @@
         android:id="@+id/add_maquina"
         android:layout_width="307dp"
         android:layout_height="67dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:text="+ MAQUINA"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.519"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sync" />
 
     <Button
         android:id="@+id/add_op"
-        android:layout_width="307dp"
+        android:layout_width="306dp"
         android:layout_height="62dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="4dp"
         android:text="+ OPERAÇÃO"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.519"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_maquina" />
 
     <Button
         android:id="@+id/add_posto"
-        android:layout_width="306dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="308dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="8dp"
         android:text="+ POSTO DE TRABALHO"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_op" />
+
+    <Button
+        android:id="@+id/atv_cass"
+        android:layout_width="310dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="4dp"
+        android:text="+ CLASSIFICAÇÃO"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_posto"
+        app:layout_constraintVertical_bias="0.002" />
 </androidx.constraintlayout.widget.ConstraintLayout>

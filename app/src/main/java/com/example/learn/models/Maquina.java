@@ -9,6 +9,11 @@ public class Maquina {
         this.nome = nome;
         this.descricao = descricao;
     }
+    public Maquina(int id, String nome, String descricao) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+    }
 
     public int getId() {
         return id;

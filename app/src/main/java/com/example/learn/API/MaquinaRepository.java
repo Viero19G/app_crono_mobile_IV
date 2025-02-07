@@ -16,13 +16,15 @@ public class MaquinaRepository {
     private final ApiService apiService;
     private final DatabaseHelper dbHelper;
     SyncManager sm;
+    Context context;
 
     public MaquinaRepository(Context context) {
+        this.context = context;  // ADICIONE ESTA LINHA
         apiService = RetrofitClient.getApiService();
         dbHelper = new DatabaseHelper(context);
     }
 
-    public void sincronizarMaquinas() {
+    public void sincronizarMaquinas(Runnable onSyncComplete) {
         apiService.getMaquinas().enqueue(new Callback<MaquinaResponse>() {
             @Override
             public void onResponse(Call<MaquinaResponse> call, Response<MaquinaResponse> response) {
@@ -32,11 +34,13 @@ public class MaquinaRepository {
                         dbHelper.inserirMaquina(maquina);
                     }
                 }
+                onSyncComplete.run();
             }
 
             @Override
             public void onFailure(Call<MaquinaResponse> call, Throwable t) {
-                Log.e("API", "Erro ao buscar postos: " + t.getMessage());
+                Log.e("API", "Erro ao buscar máquinas: " + t.getMessage());
+                onSyncComplete.run();
             }
         });
     }
@@ -51,8 +55,8 @@ public class MaquinaRepository {
             public void onResponse(Call<MaquinaResponse> call, Response<MaquinaResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     MaquinaResponse resposta = response.body();
-                    if ("Maquina criada com sucesso!".equals(resposta.getMessage())) {
-                        Log.i("API", "Máquina criada: " + resposta.getData().toString());
+                    if ("Maquina criada com sucesso!".equalsIgnoreCase(resposta.getMessage())) {
+                        Log.i("API", "Máquina criada: " + resposta.getData());
                     } else {
                         Log.w("API", "Resposta inesperada, reenviando... (" + tentativas + " restantes)");
                         criarMaquinaComReenvio(maquina, tentativas - 1);
@@ -68,9 +72,7 @@ public class MaquinaRepository {
                 Log.e("API", "Falha na requisição: " + t.getMessage() + ". Tentando novamente... (" + tentativas + " restantes)");
                 criarMaquinaComReenvio(maquina, tentativas - 1);
             }
-
-
         });
-        sm.syncDB();
+
     }
 }

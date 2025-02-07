@@ -17,15 +17,17 @@ public class AtividadeRepository {
     private final ApiService apiService;
     private final DatabaseHelper dbHelper;
     SyncManager sm;
+    Context context;
 
     public AtividadeRepository(Context context) {
+        this.context = context;  // ADICIONE ESTA LINHA
         apiService = RetrofitClient.getApiService();
         dbHelper = new DatabaseHelper(context);
     }
 
     public void criarAtividadeComReenvio(final Atividade atividade, final int tentativas) {
         if (tentativas <= 0) {
-            Log.e("API", "Máquina não pôde ser criada após múltiplas tentativas.");
+            Log.e("API", "Atividade não pôde ser criada após múltiplas tentativas.");
             return;
         }
 
@@ -34,8 +36,8 @@ public class AtividadeRepository {
             public void onResponse(Call<AtividadesResponse> call, Response<AtividadesResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     AtividadesResponse resposta = response.body();
-                    if ("Atividade criada com sucesso!".equals(resposta.getMessage())) {
-                        Log.i("API", "Atividade criada: " + resposta.getData().toString());
+                    if ("Atividade criada com sucesso!".equalsIgnoreCase(resposta.getMessage())) {
+                        Log.i("API", "Atividade criada: " + resposta.getData());
                     } else {
                         Log.w("API", "Resposta inesperada, reenviando... (" + tentativas + " restantes)");
                         criarAtividadeComReenvio(atividade, tentativas - 1);
@@ -51,9 +53,6 @@ public class AtividadeRepository {
                 Log.e("API", "Falha na requisição: " + t.getMessage() + ". Tentando novamente... (" + tentativas + " restantes)");
                 criarAtividadeComReenvio(atividade, tentativas - 1);
             }
-
-
         });
-
     }
 }

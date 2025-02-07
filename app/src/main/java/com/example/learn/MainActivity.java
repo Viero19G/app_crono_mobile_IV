@@ -17,10 +17,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseHelper dbHelp;
     RecyclerView recyclerView;
     FloatingActionButton add_btn;
-    Button syncButn;
-    Button add_posto;
-    Button add_op;
-    Button add_maquina;
+    Button syncButn,add_posto,add_op, add_maquina, atv_cass;
+
     SyncManager sm;
 
     @Override
@@ -49,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, createOp.class);
+                startActivity(intent);
+            }
+        });
+        atv_cass = findViewById(R.id.atv_cass);
+        atv_cass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, createClass.class);
                 startActivity(intent);
             }
         });
@@ -82,7 +88,11 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d("MainActivity", "Iniciando sincronização...");
                         dbHelp.clearTables();
-                        sm.syncDB();
+                        sm.syncDB(new Runnable() {
+                            @Override
+                            public void run() {
+                            }
+                        });;
                         Log.d("MainActivity", "Sincronização concluída com sucesso.");
                     } catch (Exception e) {
                         Log.e("MainActivity", "Erro ao sincronizar", e);

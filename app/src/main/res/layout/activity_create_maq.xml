@@ -26,9 +26,11 @@
         android:layout_marginTop="48dp"
         android:text="enviar"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.86"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/deesc_maq"
-        app:layout_constraintVertical_bias="0.769"
-        tools:layout_editor_absoluteX="223dp"
+        app:layout_constraintVertical_bias="0.424"
         tools:ignore="MissingConstraints" />
 
     <EditText

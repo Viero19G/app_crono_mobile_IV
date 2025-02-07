@@ -9,13 +9,15 @@ import okhttp3.OkHttpClient;
 
 
 public class SyncManager {
+    private final OkHttpClient client;
     private final MaquinaRepository maquinaRepository;
     private final OperacaoRepository operacaoRepository;
     private final PostoRepository postoRepository;
-
-    private final OkHttpClient client;
+    private final ClassificacaoRepository classificacaoRepository;
     private final DatabaseHelper dbHelper;
     private final Context context;
+    private int syncCount = 0; // Contador de sincronizações ativas
+    private Runnable onComplete; // Callback quando todas as syncs terminarem
 
     public SyncManager(Context context) {
         this.context = context;
@@ -25,17 +27,27 @@ public class SyncManager {
         this.maquinaRepository = new MaquinaRepository(context);
         this.operacaoRepository = new OperacaoRepository(context);
         this.postoRepository = new PostoRepository(context);
+        this.classificacaoRepository = new ClassificacaoRepository(context);
     }
 
 
-    public void syncDB(){
+    public void syncDB(Runnable onComplete) {
+        this.onComplete = onComplete;
         dbHelper.clearTables();
-        maquinaRepository.sincronizarMaquinas();
-        operacaoRepository.sincronizarOperacoes();
-        postoRepository.sincronizarPostos();
+        syncCount = 4; // Número total de sincronizações que precisam finalizar
+
+        maquinaRepository.sincronizarMaquinas(this::onSyncComplete);
+        postoRepository.sincronizarPostos(this::onSyncComplete);
+        classificacaoRepository.sincronizarClassificacao(this::onSyncComplete);
+        operacaoRepository.sincronizarOperacoes(this::onSyncComplete);
     }
 
-    // Repeat similar logic for syncOperacoes() and syncMaquinas()
+    private synchronized void onSyncComplete() {
+        syncCount--;
+        if (syncCount == 0 && onComplete != null) {
+            onComplete.run();
+        }
+    }
 
     private void showToast(String message) {
         new android.os.Handler(context.getMainLooper()).post(() ->

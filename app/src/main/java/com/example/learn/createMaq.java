@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 //import com.example.learn.API.ApiService;
 import com.example.learn.API.MaquinaRepository;
+import com.example.learn.API.SyncManager;
 import com.example.learn.database.DatabaseHelper;
 import com.example.learn.models.Maquina;
 
@@ -17,11 +18,19 @@ public class createMaq extends AppCompatActivity {
     EditText nome_maq, desc_maq;
     Button send_maq;
     Context context;
+    SyncManager sm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_maq);
-
+        sm = new SyncManager(createMaq.this);
+        sm.syncDB(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });
         nome_maq = findViewById(R.id.nome_maq);
         desc_maq = findViewById(R.id.deesc_maq);
         send_maq = findViewById(R.id.send_maq);
