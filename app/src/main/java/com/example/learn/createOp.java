@@ -49,15 +49,23 @@ public class createOp extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        carregarSpinner();
+                        carregarSpinner(); // Atualiza a UI após a sincronização
                     }
                 });
             }
-        });
+        }, createOp.this); // Passa o contexto da Activity
+
 
         send_op.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String nome = nome_op.getText().toString().trim();
+                String descricao =desc_op.getText().toString().trim();
+                if (nome.isEmpty() || descricao.isEmpty() || id_class <= 0) {
+                    Toast.makeText(createOp.this, "Preencha todos os campos da operação!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 DatabaseHelper dbHelp = new DatabaseHelper(createOp.this);
 
                 dbHelp.addOp(

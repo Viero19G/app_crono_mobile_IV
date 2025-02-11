@@ -6,8 +6,6 @@ public class Operacao {
     private String descricao;
     private int classificacao;
 
-    public Operacao(){
-    }
 
     public void setId(int id) {
         this.id = id;
@@ -43,7 +41,10 @@ public class Operacao {
     }
 
     public Operacao(int id, String nome) {
+        this.id = id;
+        this.nome = nome;
     }
+
 
     public int getId_Class() { return classificacao; }
     public int getId() { return id; }

@@ -2,13 +2,17 @@ package com.example.learn;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.content.Intent;
+import android.util.Log;
 import android.widget.Button;
-
 import com.example.learn.API.SyncManager;
 import com.example.learn.database.DatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Exibir Toast vermelho por 30 segundos
+        mostrarToastVermelho();
+
 
         recyclerView = findViewById(R.id.recyclerView);
 
@@ -88,17 +95,60 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d("MainActivity", "Iniciando sincronização...");
                         dbHelp.clearTables();
-                        sm.syncDB(new Runnable() {
-                            @Override
-                            public void run() {
-                            }
-                        });;
-                        Log.d("MainActivity", "Sincronização concluída com sucesso.");
+                        sm.syncDB(() -> {
+                            Toast.makeText(MainActivity.this, "Sincronização concluída!", Toast.LENGTH_SHORT).show();
+                        }, MainActivity.this);
+                        add_maquina.setEnabled(true);
+                        add_op.setEnabled(true);
+                        add_posto.setEnabled(true);
+                        add_btn.setEnabled(true);
+                        atv_cass.setEnabled(true);
                     } catch (Exception e) {
                         Log.e("MainActivity", "Erro ao sincronizar", e);
                     }
                 }
             });
         }
+        add_maquina.setEnabled(false);
+        add_op.setEnabled(false);
+        add_posto.setEnabled(false);
+        add_btn.setEnabled(false);
+        atv_cass.setEnabled(false);
     }
+    private void mostrarToastVermelho() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        int duracaoTotal = 10000; // 30 segundos
+        int intervaloToast = 5000; // Tempo de Toast.LENGTH_LONG
+        int vezesParaRepetir = duracaoTotal / intervaloToast; // Quantidade de repetições
+
+        Runnable toastRunnable = new Runnable() {
+            int contador = 0;
+
+            @Override
+            public void run() {
+                if (contador < vezesParaRepetir) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "⚠️ Lembre-se de Sincronizar a BASE DE DADOS!",
+                            Toast.LENGTH_LONG);
+
+                    // Personalizar o Toast para ser vermelho
+                    View view = toast.getView();
+                    if (view != null) {
+                        view.setBackgroundColor(Color.RED);
+                        TextView text = view.findViewById(android.R.id.message);
+                        text.setTextColor(Color.WHITE);
+                        text.setGravity(Gravity.CENTER);
+                    }
+
+                    toast.show();
+                    contador++;
+                    handler.postDelayed(this, intervaloToast); // Agendar próxima exibição
+                }
+            }
+        };
+
+        // Iniciar a repetição do Toast
+        handler.post(toastRunnable);
+    }
+
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 //import com.example.learn.API.ApiService;
 
@@ -26,17 +27,21 @@ public class createPosto extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_posto);
         sm = new SyncManager(createPosto.this);
-        sm.syncDB(new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
+        sm.syncDB(() -> {
+            Toast.makeText(createPosto.this, "Sincronização concluída!", Toast.LENGTH_SHORT).show();
+        }, createPosto.this);
         nome_posto = findViewById(R.id.nome_posto);
         desc_posto = findViewById(R.id.deesc_posto);
         send_posto = findViewById(R.id.send_posto);
         send_posto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String nome = nome_posto.getText().toString().trim();
+                String descricao = desc_posto.getText().toString().trim();
+                if (nome.isEmpty() || descricao.isEmpty()) {
+                    Toast.makeText(createPosto.this, "Preencha todos os campos do posto de trabalho!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 DatabaseHelper dbHelp= new DatabaseHelper(createPosto.this);
                // ApiService api = new ApiService();
                 dbHelp.addPosto(nome_posto.getText().toString().trim(),

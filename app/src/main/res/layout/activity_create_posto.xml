@@ -13,7 +13,7 @@
         android:layout_marginTop="80dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Descrição"
+        android:hint="Descrição"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
         android:layout_marginTop="144dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Nome do Posto de Trabalho"
+        android:hint="Nome do Posto de Trabalho"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

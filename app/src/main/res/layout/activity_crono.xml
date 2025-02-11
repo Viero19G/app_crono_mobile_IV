@@ -19,6 +19,7 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
+            <!-- Container do Cronômetro -->
             <EditText
                 android:id="@+id/nomeAtv"
                 android:layout_width="match_parent"
@@ -28,7 +29,6 @@
                 android:padding="10dp"
                 android:textSize="16sp" />
 
-            <!-- Container do Cronômetro -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

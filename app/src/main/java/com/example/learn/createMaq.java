@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 //import com.example.learn.API.ApiService;
 import com.example.learn.API.MaquinaRepository;
@@ -111,6 +112,13 @@ public class createMaq extends AppCompatActivity {
         send_maq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String nome = nome_maq.getText().toString().trim();
+                String descricao = desc_maq.getText().toString().trim();
+
+                if (nome.isEmpty() || descricao.isEmpty()) {
+                    Toast.makeText(createMaq.this, "Preencha todos os campos da máquina!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 DatabaseHelper dbHelp= new DatabaseHelper(createMaq.this);
                 //ApiService api = new ApiService();
                 dbHelp.addMaquina(nome_maq.getText().toString().trim(),

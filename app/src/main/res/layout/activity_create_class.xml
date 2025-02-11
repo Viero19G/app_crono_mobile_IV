@@ -11,7 +11,7 @@
         android:layout_width="232dp"
         android:layout_height="58dp"
         android:ems="10"
-        android:text="Nome Para Classificação"
+        android:hint="Nome da Classificação"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.557"

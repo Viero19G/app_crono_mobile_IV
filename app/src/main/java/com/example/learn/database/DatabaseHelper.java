@@ -157,9 +157,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(FK_MAQ, id_maq);
         long result = db.insert(TABELA_MAQOP, null, cv);
         if (result == 1) {
-            Toast.makeText(context, "Erro banco local", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "MAQUINA E OP", Toast.LENGTH_SHORT).show();
         }
     }
 

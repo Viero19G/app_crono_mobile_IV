@@ -147,6 +147,8 @@ public class cronoActivity extends AppCompatActivity {
         btnProximo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Desativa para impedir alteração da maquina após iniciada cronoAnalise
+                spMaq.setEnabled(false);
                 cronus.stop();
                 int tempoAtual = (int) (SystemClock.elapsedRealtime() - cronus.getBase()) / 1000;
                 int tempoUltimaOperacao = tempoAtual - cr.getSegundos_total(); // Diferença de tempo da última operação
@@ -179,6 +181,7 @@ public class cronoActivity extends AppCompatActivity {
                 adptOp = new ArrayAdapter<>(cronoActivity.this, android.R.layout.simple_list_item_1, ops);
                 adptOp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spOp.setAdapter(adptOp);
+
                 int selectedPosition = spOp.getSelectedItemPosition();
                 spOp.setLayoutParams(spinnerParams);
                 spinersOp.add(spOp);
@@ -256,6 +259,15 @@ public class cronoActivity extends AppCompatActivity {
                     }
                 }
                 int total_seg = (cr.getSegundos_total()) / 1000;
+                String nome = nomeAtv.getText().toString().trim();
+                String dataIni = dataInicio.getText().toString().trim();
+                String dataF = dataFim.getText().toString().trim();
+
+                if (nome.isEmpty() || dataIni.isEmpty() || dataF.isEmpty() || post <= 0 || maq <= 0) {
+                    Toast.makeText(context, "Preencha todos os campos da atividade!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Atividade novaAtividade = new Atividade(
                         nomeAtv.getText().toString().trim(),  // Nome da atividade
                         dataInicio.getText().toString().trim(),
