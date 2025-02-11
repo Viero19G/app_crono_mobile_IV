@@ -6,6 +6,29 @@ public class Operacao {
     private String descricao;
     private int classificacao;
 
+    public Operacao(){
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public int getClassificacao() {
+        return classificacao;
+    }
+
+    public void setClassificacao(int classificacao) {
+        this.classificacao = classificacao;
+    }
+
     public Operacao(String nome, String descricao, int id_class) {
         this.nome = nome;
         this.descricao = descricao;
@@ -19,6 +42,9 @@ public class Operacao {
         this.classificacao = id_class;
     }
 
+    public Operacao(int id, String nome) {
+    }
+
     public int getId_Class() { return classificacao; }
     public int getId() { return id; }
     public String getNome() { return nome; }
@@ -26,6 +52,5 @@ public class Operacao {
 
     @Override
     public String toString() {
-        return nome; // Isso define o que será exibido no Spinner
-    }
+        return nome; }
 }

@@ -2,21 +2,15 @@ package com.example.learn.models;
 
 import java.util.List;
 
-public class Maquina {
+public class MaquinaB {
     private int id;
     private String nome;
     private String descricao;
-    private List<Operacao> ops;
-    private List<Integer> operacoes;// IDs das operações associadas
-
-    public Maquina(int id, String nome) {
-        this.id = id;
-        this.nome = nome;
-    }
-
+    private List<Operacao> operacoes;
+    private List<Integer> ops;// IDs das operações associadas
 
     public List<Operacao> getOperacoes() {
-        return ops;
+        return operacoes;
     }
 
     public void setNome(String nome) {
@@ -28,20 +22,20 @@ public class Maquina {
     }
 
     public void setOperacoes(List<Integer> operacoes) {
-        this.operacoes = operacoes;
-    }
-    public Maquina() {
-    }
-    public Maquina(String nome, String descricao, List<Operacao> operacoes) {
-        this.nome = nome;
-        this.descricao = descricao;
         this.ops = operacoes;
     }
-    public Maquina(int id, String nome, String descricao, List<Operacao> operacoes) {
+    public MaquinaB() {
+    }
+    public MaquinaB(String nome, String descricao, List<Operacao> operacoes) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.operacoes = operacoes;
+    }
+    public MaquinaB(int id, String nome, String descricao, List<Operacao> operacoes) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
-        this.ops = operacoes;
+        this.operacoes = operacoes;
     }
 
     public int getId() {

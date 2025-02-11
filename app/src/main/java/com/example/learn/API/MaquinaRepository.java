@@ -1,10 +1,14 @@
 package com.example.learn.API;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.learn.database.DatabaseHelper;
 import com.example.learn.models.Maquina;
 
+import com.example.learn.models.MaquinaB;
+import com.example.learn.models.Operacao;
+import com.example.learn.responses.MaquinaBResponse;
 import com.example.learn.responses.MaquinaResponse;
 
 import java.util.List;
@@ -25,20 +29,27 @@ public class MaquinaRepository {
     }
 
     public void sincronizarMaquinas(Runnable onSyncComplete) {
-        apiService.getMaquinas().enqueue(new Callback<MaquinaResponse>() {
+        apiService.getMaquinas().enqueue(new Callback<MaquinaBResponse>() {
             @Override
-            public void onResponse(Call<MaquinaResponse> call, Response<MaquinaResponse> response) {
+            public void onResponse(Call<MaquinaBResponse> call, Response<MaquinaBResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Maquina> maquinas = response.body().getData();
-                    for (Maquina maquina : maquinas) {
+                    List<MaquinaB> maquinas = response.body().getData();
+                    for (MaquinaB maquina : maquinas) {
+
+                        // Adiciona a máquina no banco de dados
                         dbHelper.inserirMaquina(maquina);
+
+                        // Associa operações à máquina
+                        for (Operacao operacao : maquina.getOperacoes()) {
+                            dbHelper.addMaqOp(operacao.getId(), maquina.getId());
+                        }
                     }
                 }
                 onSyncComplete.run();
             }
 
             @Override
-            public void onFailure(Call<MaquinaResponse> call, Throwable t) {
+            public void onFailure(Call<MaquinaBResponse> call, Throwable t) {
                 Log.e("API", "Erro ao buscar máquinas: " + t.getMessage());
                 onSyncComplete.run();
             }
@@ -47,6 +58,7 @@ public class MaquinaRepository {
     public void criarMaquinaComReenvio(final Maquina maquina, final int tentativas) {
         if (tentativas <= 0) {
             Log.e("API", "Máquina não pôde ser criada após múltiplas tentativas.");
+            Toast.makeText(context, "Erro ao enviar para API.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -55,8 +67,9 @@ public class MaquinaRepository {
             public void onResponse(Call<MaquinaResponse> call, Response<MaquinaResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     MaquinaResponse resposta = response.body();
-                    if ("Maquina criada com sucesso!".equalsIgnoreCase(resposta.getMessage())) {
+                    if ("criado com sucesso!".equalsIgnoreCase(resposta.getMessage())) {
                         Log.i("API", "Máquina criada: " + resposta.getData());
+                        Toast.makeText(context, "Enviado para API.", Toast.LENGTH_LONG).show();
                     } else {
                         Log.w("API", "Resposta inesperada, reenviando... (" + tentativas + " restantes)");
                         criarMaquinaComReenvio(maquina, tentativas - 1);
@@ -71,6 +84,8 @@ public class MaquinaRepository {
             public void onFailure(Call<MaquinaResponse> call, Throwable t) {
                 Log.e("API", "Falha na requisição: " + t.getMessage() + ". Tentando novamente... (" + tentativas + " restantes)");
                 criarMaquinaComReenvio(maquina, tentativas - 1);
+                Toast.makeText(context, "Erro ao enviar para API.", Toast.LENGTH_LONG).show();
+
             }
         });
 

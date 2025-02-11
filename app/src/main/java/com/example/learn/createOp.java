@@ -60,7 +60,7 @@ public class createOp extends AppCompatActivity {
             public void onClick(View v) {
                 DatabaseHelper dbHelp = new DatabaseHelper(createOp.this);
 
-                dbHelp.inserirOperacoesSemId(
+                dbHelp.addOp(
                         nome_op.getText().toString().trim(),
                         desc_op.getText().toString().trim(),
                         id_class

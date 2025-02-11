@@ -8,6 +8,7 @@ import com.example.learn.models.Operacao;
 import com.example.learn.models.PostoTrabalho;
 import com.example.learn.responses.AtividadesResponse;
 import com.example.learn.responses.ClassificacaoResponse;
+import com.example.learn.responses.MaquinaBResponse;
 import com.example.learn.responses.MaquinaResponse;
 import com.example.learn.responses.OperacaoResponse;
 import com.example.learn.responses.PostoResponse;
@@ -38,7 +39,7 @@ public interface ApiService {
     Call<ClassificacaoResponse> criarClassificacao(@Body Classificacao classificacao);
 
     @GET("maquinas/maquinalist/")
-    Call<MaquinaResponse> getMaquinas();
+    Call<MaquinaBResponse> getMaquinas();
 
     @POST("maquinas/maquinacreate/")
     Call<MaquinaResponse> criarMaquina(@Body Maquina maquina);

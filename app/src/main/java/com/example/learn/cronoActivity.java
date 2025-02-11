@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.learn.API.AtividadeRepository;
@@ -23,6 +24,9 @@ import com.example.learn.API.AtividadeRepository;
 import com.example.learn.database.DatabaseHelper;
 import com.example.learn.models.Atividade;
 import com.example.learn.models.CronometroGerente;
+import com.example.learn.models.Maquina;
+import com.example.learn.models.Operacao;
+import com.example.learn.models.PostoTrabalho;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +38,13 @@ public class cronoActivity extends AppCompatActivity {
     private List<Integer> listaOperacoes, idsOp, idsMaq, idsPosto ,tempoOperacao;
     private List<Spinner> spinersOp = new ArrayList<>();
     private ScrollView scrollView;
-    private ArrayAdapter<String> adptOp, adptMaq, adptPo;
+    private ArrayAdapter<Operacao> adptOp;
+    private ArrayAdapter<Maquina> adptMaq;
+    private ArrayAdapter<PostoTrabalho> adptPo;
     private DatabaseHelper dbHelp;
     private LinearLayout linear_op;
     private EditText dataInicio, dataFim, nomeAtv, obs;
-
+    private ArrayList<Operacao> ops;
     private Chronometer cronus;
     private int PauseOffSet = 0;
     private int maq, post, count;
@@ -48,7 +54,7 @@ public class cronoActivity extends AppCompatActivity {
     private List<Integer> listaSpinners = new ArrayList<>();
     private List<Integer> listaTextViews = new ArrayList<>();
     @Override
-    
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crono);
@@ -80,18 +86,26 @@ public class cronoActivity extends AppCompatActivity {
 
 
 
-        adptOp = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,dbHelp.getOperacores() );
+
         adptMaq  = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,dbHelp.getMaquinas() );
         adptPo = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,dbHelp.getPosto() );
 
+        adptMaq.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spMaq.setAdapter(adptMaq);
-        int selectedPosition = spMaq.getSelectedItemPosition();
-        maq = selectedPosition;
         spMaq.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int indiceSelecionado = position;
-                maq = position;
+                Maquina maquinaSelecionada = (Maquina) parent.getItemAtPosition(position);
+                maq = maquinaSelecionada.getId();
+                String nome = maquinaSelecionada.getNome();
+                ops = dbHelp.getOperacoesMaq(maq);
+
+
+                if (ops != null && !ops.isEmpty()) {
+                    Toast.makeText(cronoActivity.this, "Operações encontradas para : " + nome, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(cronoActivity.this, "Nenhuma operação disponível para esta máquina: " + maq, Toast.LENGTH_SHORT).show();
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -99,13 +113,11 @@ public class cronoActivity extends AppCompatActivity {
             }
         });
         spPost.setAdapter(adptPo);
-        int selectedPosition2 = spPost.getSelectedItemPosition();
-        post = selectedPosition2;
         spPost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int indiceSelecionado2 = position;
-                post = position;
+                PostoTrabalho postoTrabalho = (PostoTrabalho) parent.getItemAtPosition(position);
+                post = postoTrabalho.getId();
             }
 
             @Override
@@ -164,6 +176,8 @@ public class cronoActivity extends AppCompatActivity {
                         dpToPx(259),
                         dpToPx(39)
                 );
+                adptOp = new ArrayAdapter<>(cronoActivity.this, android.R.layout.simple_list_item_1, ops);
+                adptOp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spOp.setAdapter(adptOp);
                 int selectedPosition = spOp.getSelectedItemPosition();
                 spOp.setLayoutParams(spinnerParams);
@@ -171,8 +185,8 @@ public class cronoActivity extends AppCompatActivity {
                 spOp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        int indiceSelecionado = position;
-                        listaOperacoes.add(position);
+                        Operacao operacao = (Operacao) parent.getItemAtPosition(position);
+                        listaOperacoes.add(operacao.getId());
                     }
 
                     @Override
@@ -224,7 +238,7 @@ public class cronoActivity extends AppCompatActivity {
                 return Math.round(dp * density);
             }
 
-    });
+        });
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

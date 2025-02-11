@@ -1,6 +1,7 @@
 package com.example.learn.API;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.learn.database.DatabaseHelper;
 import com.example.learn.models.Maquina;
@@ -51,7 +52,8 @@ public class OperacaoRepository {
 
     public void criarOperacaoComReenvio(final Operacao operacao, final int tentativas) {
         if (tentativas <= 0) {
-            Log.e("API", "Operação não pôde ser criada após múltiplas tentativas.");
+            Log.e("API", "Operação não pôde ser criada após múltiplas tentativas. Salvando localmente...");
+            Toast.makeText(context, "Erro ao enviar para API.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -60,8 +62,9 @@ public class OperacaoRepository {
             public void onResponse(Call<OperacaoResponse> call, Response<OperacaoResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     OperacaoResponse resposta = response.body();
-                    if ("Operacao criada com sucesso!".equalsIgnoreCase(resposta.getMessage())) {
+                    if ("criado com sucesso!".equalsIgnoreCase(resposta.getMessage())) {
                         Log.i("API", "Operação criada: " + resposta.getData());
+                        Toast.makeText(context, "Operação enviada com sucesso!", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.w("API", "Resposta inesperada, reenviando... (" + tentativas + " restantes)");
                         criarOperacaoComReenvio(operacao, tentativas - 1);
@@ -75,6 +78,9 @@ public class OperacaoRepository {
             @Override
             public void onFailure(Call<OperacaoResponse> call, Throwable t) {
                 Log.e("API", "Falha na requisição: " + t.getMessage() + ". Tentando novamente... (" + tentativas + " restantes)");
+                if (tentativas - 1 <= 0) {
+                    Toast.makeText(context, "Erro ao enviar para API.", Toast.LENGTH_LONG).show();
+                }
                 criarOperacaoComReenvio(operacao, tentativas - 1);
             }
         });

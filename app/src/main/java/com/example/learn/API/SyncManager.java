@@ -34,12 +34,14 @@ public class SyncManager {
     public void syncDB(Runnable onComplete) {
         this.onComplete = onComplete;
         dbHelper.clearTables();
+
         syncCount = 4; // Número total de sincronizações que precisam finalizar
 
-        maquinaRepository.sincronizarMaquinas(this::onSyncComplete);
+
         postoRepository.sincronizarPostos(this::onSyncComplete);
         classificacaoRepository.sincronizarClassificacao(this::onSyncComplete);
         operacaoRepository.sincronizarOperacoes(this::onSyncComplete);
+        maquinaRepository.sincronizarMaquinas(this::onSyncComplete);
     }
 
     private synchronized void onSyncComplete() {

@@ -1,6 +1,7 @@
 package com.example.learn.API;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.learn.database.DatabaseHelper;
 
@@ -51,6 +52,7 @@ public class PostoRepository {
     public void criarPostoComReenvio(final PostoTrabalho postoTrabalho, final int tentativas) {
         if (tentativas <= 0) {
             Log.e("API", "Posto não pôde ser criada após múltiplas tentativas.");
+            Toast.makeText(context, "Erro ao enviar para API.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -59,8 +61,10 @@ public class PostoRepository {
             public void onResponse(Call<PostoResponse> call, Response<PostoResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     PostoResponse resposta = response.body();
-                    if ("Posto criado com sucesso!".equals(resposta.getMessage())) {
-                        Log.i("API", "Posto criada: " + resposta.getData().toString());
+                    if ("criado com sucesso!".equals(resposta.getMessage())) {
+                        Log.i("API", "Posto criado: " + resposta.getData().toString());
+                        Toast.makeText(context, "Enviado para API.", Toast.LENGTH_LONG).show();
+
                     } else {
                         Log.w("API", "Resposta inesperada, reenviando... (" + tentativas + " restantes)");
                         criarPostoComReenvio(postoTrabalho, tentativas - 1);
@@ -73,8 +77,11 @@ public class PostoRepository {
 
             @Override
             public void onFailure(Call<PostoResponse> call, Throwable t) {
+                Toast.makeText(context, "Erro ao enviar para API.", Toast.LENGTH_LONG).show();
+
                 Log.e("API", "Falha na requisição: " + t.getMessage() + ". Tentando novamente... (" + tentativas + " restantes)");
                 criarPostoComReenvio(postoTrabalho, tentativas - 1);
+                Toast.makeText(context, "Erro ao enviar para API.", Toast.LENGTH_LONG).show();
             }
         });
 

@@ -12,10 +12,12 @@ import androidx.annotation.Nullable;
 
 import com.example.learn.models.Classificacao;
 import com.example.learn.models.Maquina;
+import com.example.learn.models.MaquinaB;
 import com.example.learn.models.Operacao;
 import com.example.learn.models.PostoTrabalho;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -24,40 +26,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2; // Atualize para recriar o banco
 
     // Tabelas e colunas corrigidas
-    private static final String TABELA_MAQUINA = "maquina";
-    private static final String ID_MAQUINA = "_id";
-    private static final String NOME_MAQUINA = "nome";
-    private static final String DESC_MAQUINA = "descricao";
+    private static final String TABELA_MAQUINA = " maquina ";
+    private static final String ID_MAQUINA = " _id ";
+    private static final String NOME_MAQUINA = " nome ";
+    private static final String DESC_MAQUINA = " descricao ";
 
-    private static final String TABELA_POSTO = "posto";
-    private static final String ID_POSTO = "_id";
-    private static final String NOME_POSTO = "nome";
-    private static final String DESC_POSTO = "descricao";
+    private static final String TABELA_POSTO = " posto ";
+    private static final String ID_POSTO = " _id ";
+    private static final String NOME_POSTO = " nome ";
+    private static final String DESC_POSTO = " descricao ";
 
-    private static final String TABELA_OPERACAO = "operacao";
-    private static final String ID_OPERACAO = "_id";
-    private static final String NOME_OPERACAO = "nome";
-    private static final String DESC_OPERACAO = "descricao";
-    private static final String FK_CLASSIFICACAO = "classificacao_id"; // Corrigido
+    private static final String TABELA_OPERACAO = " operacao ";
+    private static final String ID_OPERACAO = " _id ";
+    private static final String NOME_OPERACAO = " nome ";
+    private static final String DESC_OPERACAO = " descricao ";
+    private static final String FK_CLASSIFICACAO = " classificacao_id "; // Corrigido
 
-    private static final String TABELA_ATIVIDADE = "atividade";
-    private static final String ID_ATIVIDADE = "_id";
-    private static final String NOME_ATIVIDADE = "nome";
-    private static final String OBS_ATIVIDADE = "observacao";
-    private static final String DATAI_ATIVIDADE = "data_inicio";
-    private static final String DATAF_ATIVIDADE = "data_fim";
-    private static final String FK_POSTO = "posto_id";
-    private static final String FK_MAQUINA = "maquina_id";
+    private static final String TABELA_ATIVIDADE = " atividade ";
+    private static final String ID_ATIVIDADE = " _id ";
+    private static final String NOME_ATIVIDADE = " nome ";
+    private static final String OBS_ATIVIDADE = " observacao ";
+    private static final String DATAI_ATIVIDADE = " data_inicio ";
+    private static final String DATAF_ATIVIDADE = " data_fim ";
+    private static final String FK_POSTO = " posto_id ";
+    private static final String FK_MAQUINA = " maquina_id ";
 
-    private static final String TABELA_TOP = "tempo_operacao";
-    private static final String ID_TOP = "_id";
-    private static final String TEMPO_TOP = "tempo";
-    private static final String FK_OP = "op_id";
-    private static final String FK_ATIVIDADE = "atividade_id"; // Corrigido
+    private static final String TABELA_TOP = " tempo_operacao ";
+    private static final String ID_TOP = " _id ";
+    private static final String TEMPO_TOP = " tempo ";
+    private static final String FK_OP = " op_id ";
+    private static final String FK_ATIVIDADE = " atividade_id "; // Corrigido
 
-    private static final String TABELA_CLASSIFICACAO = "classificacao";
-    private static final String ID_CLASSIFICACAO = "_id";
-    private static final String NOME_CLASSIFICACAO = "nome";
+    private static final String TABELA_CLASSIFICACAO = " classificacao ";
+    private static final String ID_CLASSIFICACAO = " _id ";
+    private static final String NOME_CLASSIFICACAO = " nome ";
+
+    private static final String TABELA_MAQOP = " maquina_operacoes ";
+    private static final String FK_MAQ = " id_maq ";
+
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -112,6 +118,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (" + FK_ATIVIDADE + ") REFERENCES " + TABELA_ATIVIDADE + "(" + ID_ATIVIDADE + "), " +
                 "FOREIGN KEY (" + FK_OP + ") REFERENCES " + TABELA_OPERACAO + "(" + ID_OPERACAO + "));";
         db.execSQL(query6);
+
+        String query7 = "CREATE TABLE " + TABELA_MAQOP + " (" +
+                FK_OP + " INTEGER, " +
+                FK_MAQ + " INTEGER, " +
+                "FOREIGN KEY (" + FK_OP + ") REFERENCES " + TABELA_OPERACAO + "(" + ID_OPERACAO + "), " +
+                "FOREIGN KEY (" + FK_MAQ + ") REFERENCES " + TABELA_MAQUINA + "(" + ID_MAQUINA + "));";
+        db.execSQL(query7);
     }
 
     @Override
@@ -122,20 +135,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABELA_OPERACAO);
         db.execSQL("DROP TABLE IF EXISTS " + TABELA_ATIVIDADE);
         db.execSQL("DROP TABLE IF EXISTS " + TABELA_TOP);
+        db.execSQL("DROP TABLE IF EXISTS " + TABELA_MAQOP);
     }
 
     public void clearTables() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABELA_MAQUINA);
-        db.execSQL("DELETE FROM " + TABELA_CLASSIFICACAO);
-        db.execSQL("DELETE FROM " + TABELA_POSTO);
-        db.execSQL("DELETE FROM " + TABELA_OPERACAO);
-        db.execSQL("DELETE FROM " + TABELA_ATIVIDADE);
-        db.execSQL("DELETE FROM " + TABELA_TOP);
+        db.execSQL("DELETE FROM  " + TABELA_MAQUINA);
+        db.execSQL("DELETE FROM  " + TABELA_POSTO);
+        db.execSQL("DELETE FROM  " + TABELA_CLASSIFICACAO);
+        db.execSQL("DELETE FROM  " + TABELA_OPERACAO);
+        db.execSQL("DELETE FROM  " + TABELA_ATIVIDADE);
+        db.execSQL("DELETE FROM  " + TABELA_TOP);
+        db.execSQL("DELETE FROM  " + TABELA_MAQOP);
 
     }
 
-
+    public void addMaqOp(int id_op, int id_maq) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(FK_OP, id_op);
+        cv.put(FK_MAQ, id_maq);
+        long result = db.insert(TABELA_MAQOP, null, cv);
+        if (result == 1) {
+            Toast.makeText(context, "Erro banco local", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "MAQUINA E OP", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public void addMaquina(String nome, String desc) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -144,20 +170,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(DESC_MAQUINA, desc);
         long result = db.insert(TABELA_MAQUINA, null, cv);
         if (result == 1) {
-            Toast.makeText(context, "erro ao cadastrar maquina", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Cadastrado com sucesso", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+
     public void addClassificacao(String nome) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(NOME_CLASSIFICACAO, nome);
         long result = db.insert(TABELA_CLASSIFICACAO, null, cv);
         if (result == 1) {
-            Toast.makeText(context, "erro ao cadastrar maquina", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Cadastrado com sucesso", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -167,10 +193,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(NOME_POSTO, nome);
         cv.put(DESC_POSTO, desc);
         long result = db.insert(TABELA_POSTO, null, cv);
-        if (result == -1) {
-            Toast.makeText(context, "Erro ao cadastrar posto", Toast.LENGTH_SHORT).show();
+        if (result == 1) {
         } else {
-            Toast.makeText(context, "Posto cadastrado com sucesso", Toast.LENGTH_SHORT).show();
         }
     }
     public void inserirPosto(PostoTrabalho posto) {
@@ -205,9 +229,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(FK_MAQUINA, maquinaId);
         long result = db.insert(TABELA_ATIVIDADE, null, cv);
         if (result == -1) {
-            Toast.makeText(context, "Erro ao cadastrar atividade", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Atividade cadastrada com sucesso", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -219,13 +241,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(TEMPO_TOP, tempo);
         long result = db.insert(TABELA_TOP, null, cv);
         if (result == -1) {
-            Toast.makeText(context, "Erro ao cadastrar tempo de operação", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Tempo de operação cadastrado com sucesso", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void inserirMaquina(Maquina maquina) {
+    public void inserirMaquina(MaquinaB maquina) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(ID_MAQUINA, maquina.getId());
@@ -258,86 +278,239 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    public ArrayList<String> getOperacores(){
+    public int maqId(String nome, String desc) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM "+ TABELA_OPERACAO + ";" ;
+        String query = "SELECT _id FROM " + TABELA_MAQUINA + " WHERE nome = ? AND descricao = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{nome, desc});
+
+        int id = -1;  // Valor default caso não encontre nenhum registro
+        if (cursor != null && cursor.moveToFirst()) {
+            id = cursor.getInt(cursor.getColumnIndex("_id"));
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return id;
+    }
+
+    @SuppressLint("Range")
+    public Operacao opsPorId(int id_op) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT _id, nome, descricao, classificacao_id FROM " + TABELA_OPERACAO + " WHERE _id = ?";
+
+        // Passar id_op como String no array
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id_op)});
+
+        Operacao operacao = null; // Valor default caso não encontre nenhum registro
+        if (cursor != null && cursor.moveToFirst()) {
+            // Aqui, você recupera as colunas corretas e cria o objeto Operacao
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String nome = cursor.getString(cursor.getColumnIndex("nome"));
+            String descricao = cursor.getString(cursor.getColumnIndex("descricao"));
+            int classificacaoId = cursor.getInt(cursor.getColumnIndex("classificacao_id"));
+
+            // Cria o objeto Operacao com os dados obtidos
+            operacao = new Operacao(id, nome, descricao, classificacaoId);
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close(); // Sempre feche o banco de dados depois de usar
+
+        return operacao; // Retorna o objeto Operacao
+    }
+    @SuppressLint("Range")
+    public Operacao opsPorIds(int id_op) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT _id, nome  FROM " + TABELA_OPERACAO + " WHERE _id = ?";
+
+        // Passar id_op como String no array
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id_op)});
+
+        Operacao operacao = null; // Valor default caso não encontre nenhum registro
+        if (cursor != null && cursor.moveToFirst()) {
+            // Aqui, você recupera as colunas corretas e cria o objeto Operacao
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String nome = cursor.getString(cursor.getColumnIndex("nome"));
+
+            // Cria o objeto Operacao com os dados obtidos
+            operacao = new Operacao(id, nome);
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close(); // Sempre feche o banco de dados depois de usar
+
+        return operacao; // Retorna o objeto Operacao
+    }
+
+    public void addOp(String nome,String desc,int id_class ) {
+    SQLiteDatabase db = this.getWritableDatabase();
+    ContentValues cv = new ContentValues();
+        cv.put(NOME_OPERACAO, nome);
+        cv.put(DESC_OPERACAO, desc);
+        cv.put(ID_CLASSIFICACAO, id_class);
+        long result = db.insert(TABELA_OPERACAO, null, cv);
+        if (result == 1) {
+        } else {
+        }
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<String> getOperacores() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABELA_OPERACAO + " ORDER BY _id;";
         ArrayList<String> dados = new ArrayList<>();
         Cursor cursor = db.rawQuery(query, null);
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             dados.add(cursor.getString(cursor.getColumnIndex("nome")));
         }
+        cursor.close();
+        db.close();
         return dados;
     }
     @SuppressLint("Range")
-    public ArrayList<Integer> getOperacoresIds(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM "+ TABELA_OPERACAO + ";" ;
-        ArrayList<Integer> dados = new ArrayList<>();
-        Cursor cursor = db.rawQuery(query, null);
-        while(cursor.moveToNext()){
-            dados.add(cursor.getInt(cursor.getColumnIndex("_id")));
+    public ArrayList<Operacao> getOperacoesMaq(int id_maq) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Operacao> operacoes = new ArrayList<>();
+
+        String query = "SELECT  op_id  FROM " + TABELA_MAQOP + " WHERE " + FK_MAQ + " = ?";
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(query, new String[]{String.valueOf(id_maq)});
+
+            if (cursor != null && cursor.moveToFirst()) {  // Verifica se o cursor tem dados
+                do {
+                    int id_op = cursor.getInt(cursor.getColumnIndex("op_id"));
+                    Operacao operacao = opsPorIds(id_op);
+                    if (operacao != null) {
+                        operacoes.add(operacao);
+                    }
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Registra qualquer erro no log
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-        return dados;
+
+        return operacoes;
     }
+
     @SuppressLint("Range")
-    public ArrayList<String> getMaquinas(){
+    public ArrayList<Integer> getOperacoresIds() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM "+ TABELA_MAQUINA + ";" ;
-        ArrayList<String> dados = new ArrayList<>();
-        Cursor cursor = db.rawQuery(query, null);
-        while(cursor.moveToNext()){
-            dados.add(cursor.getString(cursor.getColumnIndex("nome")));
-        }
-        return dados;
-    }
-    @SuppressLint("Range")
-    public ArrayList<Integer> getMaquinasIds(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM "+ TABELA_MAQUINA + ";" ;
-        ArrayList<Integer> dados = new ArrayList<>();
-        Cursor cursor = db.rawQuery(query, null);
-        while(cursor.moveToNext()){
-            dados.add(cursor.getInt(cursor.getColumnIndex("_id")));
-        }
-        return dados;
-    }
-    @SuppressLint("Range")
-    public ArrayList<String> getPosto(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM "+ TABELA_POSTO + ";" ;
-        ArrayList<String> dados = new ArrayList<>();
-        Cursor cursor = db.rawQuery(query, null);
-        while(cursor.moveToNext()){
-            dados.add(cursor.getString(cursor.getColumnIndex("nome")));
-        }
-        return dados;
-    }
-    @SuppressLint("Range")
-    public ArrayList<Integer> getPostoIds() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABELA_POSTO + ";";
+        String query = "SELECT * FROM " + TABELA_OPERACAO + " ORDER BY _id;";
         ArrayList<Integer> dados = new ArrayList<>();
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
             dados.add(cursor.getInt(cursor.getColumnIndex("_id")));
         }
+        cursor.close();
+        db.close();
+        return dados;
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<Maquina> getMaquinas() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABELA_MAQUINA + " ORDER BY _id;";
+        ArrayList<Maquina> maquinas = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String nome = cursor.getString(cursor.getColumnIndex("nome"));
+            maquinas.add(new Maquina(id, nome));
+        }
+        cursor.close();
+        db.close();
+        return maquinas;
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<Integer> getMaquinasIds() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABELA_MAQUINA + " ORDER BY _id;";
+        ArrayList<Integer> dados = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            dados.add(cursor.getInt(cursor.getColumnIndex("_id")));
+        }
+        cursor.close();
+        db.close();
+        return dados;
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<PostoTrabalho> getPosto() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABELA_POSTO + " ORDER BY _id;";
+        ArrayList<PostoTrabalho> postos = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String nome = cursor.getString(cursor.getColumnIndex("nome"));
+            postos.add(new PostoTrabalho(id, nome));
+        }
+        cursor.close();
+        db.close();
+        return postos;
+    }
+
+    @SuppressLint("Range")
+    public ArrayList<Integer> getPostoIds() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABELA_POSTO + " ORDER BY _id;";
+        ArrayList<Integer> dados = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            dados.add(cursor.getInt(cursor.getColumnIndex("_id")));
+        }
+        cursor.close();
+        db.close();
         return dados;
     }
 
     @SuppressLint("Range")
     public ArrayList<Classificacao> getClassificacao() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABELA_CLASSIFICACAO + ";";
+        String query = "SELECT * FROM " + TABELA_CLASSIFICACAO + " ORDER BY _id;";
         ArrayList<Classificacao> classificacoes = new ArrayList<>();
         Cursor cursor = db.rawQuery(query, null);
 
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex("_id"));
             String nome = cursor.getString(cursor.getColumnIndex("nome"));
-            classificacoes.add(new Classificacao(id,nome));
+            classificacoes.add(new Classificacao(id, nome));
         }
         cursor.close();
         db.close();
         return classificacoes;
+    }
+    @SuppressLint("Range")
+    public ArrayList<Maquina> getMaqId() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABELA_MAQUINA + " ORDER BY _id;";
+        ArrayList<Maquina>  maq = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query, null);
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String nome = cursor.getString(cursor.getColumnIndex("nome"));
+            maq.add(new Maquina(id, nome));
+        }
+        cursor.close();
+        db.close();
+        return maq;
     }
 }
