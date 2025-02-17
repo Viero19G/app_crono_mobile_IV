@@ -43,7 +43,7 @@ public class createClass extends AppCompatActivity {
                 }
                 DatabaseHelper dbHelp= new DatabaseHelper(createClass.this);
                 dbHelp.addClassificacao(nome_class.getText().toString().trim());
-                ClassificacaoRepository repo = new ClassificacaoRepository(context);
+                ClassificacaoRepository repo = new ClassificacaoRepository(createClass.this);
                 Classificacao novaClas = new Classificacao(nome_class.getText().toString());
                 repo.criarClassificacaoComReenvio(novaClas, 1);
             }

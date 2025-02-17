@@ -26,11 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class createMaq extends AppCompatActivity {
-    private ArrayAdapter<String> adptOp;
+    private ArrayAdapter<Operacao> adptOp;
     private DatabaseHelper dbHelp;
-    private List<Integer> listaOperacoes, idsOp;
+    private List<Integer> idsOp;
     private List<Operacao> listaOperacoesObj;
     private List<Maquina> maqsSpiner;
+    private ArrayList<Spinner> spsOps;
     EditText nome_maq, desc_maq;
     Button send_maq, btn_add_op;
     Context context;
@@ -57,13 +58,15 @@ public class createMaq extends AppCompatActivity {
         desc_maq = findViewById(R.id.deesc_maq);
         send_maq = findViewById(R.id.send_maq);
         scrollView_maq = findViewById(R.id.scrollView_maq);
-        adptOp = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,dbHelp.getOperacores() );
+
         dbHelp = new DatabaseHelper(createMaq.this);
 
         btn_add_op.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listaOperacoes = new ArrayList<>();
+                adptOp = new ArrayAdapter<>(createMaq.this, android.R.layout.simple_spinner_item, dbHelp.getOperacores());
+                adptOp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
                 // Criando um LinearLayout horizontal para o Spinner
                 LinearLayout rowLayout = new LinearLayout(createMaq.this);
                 rowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -81,33 +84,23 @@ public class createMaq extends AppCompatActivity {
                         dpToPx(39)
                 );
                 spOp.setAdapter(adptOp);
-                int selectedPosition = spOp.getSelectedItemPosition();
                 spOp.setLayoutParams(spinnerParams);
+
+                // Adiciona o Spinner ao array de Spinners
                 spinersOp.add(spOp);
-                spOp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        int indiceSelecionado = position;
-                        listaOperacoes.add(position);
-                    }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
                 rowLayout.addView(spOp);
-                LinearLayout layout = findViewById(R.id.linear_op_maq);
-                layout.addView(rowLayout);
-                layout.requestLayout();
-                layout.post(() -> scrollView_maq.fullScroll(View.FOCUS_DOWN));
+                linear_op_maq.addView(rowLayout);
+                linear_op_maq.requestLayout();
+                scrollView_maq.post(() -> scrollView_maq.fullScroll(View.FOCUS_DOWN));
             }
+
             public int dpToPx(int dp) {
                 float density = getResources().getDisplayMetrics().density;
                 return Math.round(dp * density);
             }
-
         });
+
 
         send_maq.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,41 +112,28 @@ public class createMaq extends AppCompatActivity {
                     Toast.makeText(createMaq.this, "Preencha todos os campos da máquina!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                DatabaseHelper dbHelp= new DatabaseHelper(createMaq.this);
-                //ApiService api = new ApiService();
-                dbHelp.addMaquina(nome_maq.getText().toString().trim(),
-                        desc_maq.getText().toString().trim());
-                int maq_id = dbHelp.maqId(nome_maq.getText().toString().trim(),
-                         desc_maq.getText().toString().trim());
 
-                List<Integer> operacoes = new ArrayList<>();
-                if (idsOp != null && !idsOp.isEmpty()) {
-                    for (int indice : listaOperacoes) {
-                        if (indice >= 0 && indice < idsOp.size()) {
-                            operacoes.add(idsOp.get(indice));
-                        } else {
-                            operacoes.add(1); // Valor padrão para erros (pode ser tratado depois)
-                        }
+                idsOp.clear(); // Limpa lista antes de preencher para evitar seleções antigas
+
+                for (Spinner spOp : spinersOp) {
+                    Operacao operacaoSelecionada = (Operacao) spOp.getSelectedItem();
+                    if (operacaoSelecionada != null) {
+                        idsOp.add(operacaoSelecionada.getId()); // Adiciona apenas o que está selecionado no momento
                     }
                 }
-                for (int op : operacoes){
-                    dbHelp.addMaqOp(op, maq_id);
-                    Operacao opLoc = dbHelp.opsPorId(op);
-                    listaOperacoesObj.add(opLoc);
-                }
-                MaquinaRepository repo = new MaquinaRepository(context);
+
+                DatabaseHelper dbHelp = new DatabaseHelper(createMaq.this);
+                dbHelp.addMaquina(nome, descricao);
+                int maq_id = dbHelp.maqId(nome, descricao);
+
+                MaquinaRepository repo = new MaquinaRepository(createMaq.this);
                 Maquina novaMaquina = new Maquina();
-                novaMaquina.setNome(nome_maq.getText().toString().trim());
-                novaMaquina.setDescricao(desc_maq.getText().toString().trim());
-                novaMaquina.setOperacoes(operacoes);
+                novaMaquina.setNome(nome);
+                novaMaquina.setDescricao(descricao);
+                novaMaquina.setOperacoes(idsOp);
 
                 repo.criarMaquinaComReenvio(novaMaquina, 1);
             }
-
-
         });
-
-
-
     }
 }

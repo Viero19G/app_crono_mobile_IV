@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -257,11 +258,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void inserirOperacoes(Operacao op) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
         values.put(ID_OPERACAO, op.getId());
         values.put(NOME_OPERACAO, op.getNome());
-        values.put(ID_CLASSIFICACAO, op.getId_Class());
+        values.put(DESC_OPERACAO, op.getDescricao());
+        values.put(FK_CLASSIFICACAO, op.getClassificacao());
 
-        db.insertWithOnConflict(TABELA_OPERACAO, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        // Logando os valores antes de inserir
+        Log.d("DB_INSERT", "Inserindo operação:");
+        Log.d("DB_INSERT", "ID: " + op.getId());
+        Log.d("DB_INSERT", "Nome: " + op.getNome());
+        Log.d("DB_INSERT", "Descrição: " + op.getDescricao());
+        Log.d("DB_INSERT", "ID Classificação: " + op.getClassificacao());
+
+        long result = db.insertWithOnConflict(TABELA_OPERACAO, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        if (result == -1) {
+            Log.e("DB_INSERT", "Erro ao inserir operação no banco de dados.");
+        } else {
+            Log.d("DB_INSERT", "Operação inserida com sucesso. ID: " + result);
+        }
+
         db.close();
     }
     public void inserirOperacoesSemId(String nome,String desc,int id_class ) {
@@ -361,16 +378,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    public ArrayList<String> getOperacores() {
+    public ArrayList<Operacao> getOperacores() {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABELA_OPERACAO + " ORDER BY _id;";
-        ArrayList<String> dados = new ArrayList<>();
-        Cursor cursor = db.rawQuery(query, null);
-        while (cursor.moveToNext()) {
-            dados.add(cursor.getString(cursor.getColumnIndex("nome")));
+        ArrayList<Operacao> dados = new ArrayList<>();
+        Log.d("DB_SELECT", "Buscando operações no banco de dados...");
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, null);
+
+            if (cursor != null && cursor.moveToFirst()) {  // Verifica se o cursor tem dados
+                do {
+                    int id_op = cursor.getInt(cursor.getColumnIndex("_id"));
+                    String nome = cursor.getString(cursor.getColumnIndex("nome"));
+                    Operacao operacao = new Operacao(id_op, nome);
+                    if (operacao != null) {
+                        dados.add(operacao);
+                    }
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Registra qualquer erro no log
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-        cursor.close();
-        db.close();
         return dados;
     }
     @SuppressLint("Range")

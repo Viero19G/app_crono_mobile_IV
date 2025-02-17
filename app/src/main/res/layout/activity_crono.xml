@@ -48,23 +48,39 @@
                     android:textSize="22sp" />
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/dataInicio"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Data Hora Início"
-                android:padding="10dp"
-                android:background="@drawable/edittext_background"
-                android:textSize="16sp" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="10dp">
 
-            <EditText
-                android:id="@+id/dataFim"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Data Hora Fim"
-                android:padding="10dp"
-                android:background="@drawable/edittext_background"
-                android:textSize="16sp" />
+                <EditText
+                    android:id="@+id/dataInicio"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="Data Início"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_background"
+                    android:textSize="16sp"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:layout_marginEnd="5dp"/>
+
+                <EditText
+                    android:id="@+id/dataFim"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="Data Fim"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_background"
+                    android:textSize="16sp"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:layout_marginStart="5dp"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView"
@@ -118,10 +134,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/purple_500"
                 android:padding="10dp"
-                android:text="Próxima Operação"
-                android:textColor="@android:color/white" />
+                android:text="Próxima Operação"></Button>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -154,8 +168,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ENVIAR"
-                    android:backgroundTint="#0CC11E"
-                    android:textColor="@android:color/white"
                     android:padding="10dp"
                     android:layout_marginStart="10dp" />
             </LinearLayout>

@@ -2,6 +2,8 @@ package com.example.learn;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -28,8 +30,11 @@ import com.example.learn.models.Maquina;
 import com.example.learn.models.Operacao;
 import com.example.learn.models.PostoTrabalho;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class cronoActivity extends AppCompatActivity {
 
@@ -48,6 +53,9 @@ public class cronoActivity extends AppCompatActivity {
     private Chronometer cronus;
     private int PauseOffSet = 0;
     private int maq, post, count;
+    private final Calendar calendar = Calendar.getInstance();
+    private SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+
     Context context;
 
     // Listas para armazenar os IDs dos elementos adicionados
@@ -85,13 +93,18 @@ public class cronoActivity extends AppCompatActivity {
         tempoOperacao = new ArrayList<Integer>();
 
 
-
+        // Define o comportamento ao clicar nos campos
+        dataInicio.setOnClickListener(v -> showDateTimePicker(dataInicio));
+        dataFim.setOnClickListener(v -> showDateTimePicker(dataFim));
 
         adptMaq  = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,dbHelp.getMaquinas() );
         adptPo = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,dbHelp.getPosto() );
 
         adptMaq.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spMaq.setAdapter(adptMaq);
+
+        btnEnviar.setEnabled(false);
+        btnProximo.setEnabled(false);
         spMaq.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -132,12 +145,17 @@ public class cronoActivity extends AppCompatActivity {
                 cr.setRodando(true);
                 cronus.setBase(SystemClock.elapsedRealtime()- PauseOffSet);
                 cronus.start();
-
+                spMaq.setEnabled(false);
+                spPost.setEnabled(false);
+                dataInicio.setEnabled(false);
+                btnEnviar.setEnabled(false);
+                btnProximo.setEnabled(true);
             }
         });
         btnParar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnEnviar.setEnabled(true);
                 cr.setRodando(false);
                 cronus.stop();
                 PauseOffSet = (int) (SystemClock.elapsedRealtime()- cronus.getBase() );
@@ -149,6 +167,8 @@ public class cronoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Desativa para impedir alteração da maquina após iniciada cronoAnalise
                 spMaq.setEnabled(false);
+                spPost.setEnabled(false);
+                dataInicio.setEnabled(false);
                 cronus.stop();
                 int tempoAtual = (int) (SystemClock.elapsedRealtime() - cronus.getBase()) / 1000;
                 int tempoUltimaOperacao = tempoAtual - cr.getSegundos_total(); // Diferença de tempo da última operação
@@ -188,8 +208,6 @@ public class cronoActivity extends AppCompatActivity {
                 spOp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        Operacao operacao = (Operacao) parent.getItemAtPosition(position);
-                        listaOperacoes.add(operacao.getId());
                     }
 
                     @Override
@@ -229,7 +247,6 @@ public class cronoActivity extends AppCompatActivity {
                 TextView textView = findViewById(old);
                 if (textView != null) {
                     textView.setText(String.valueOf(cr.getSegundos()));
-                    tempoOperacao.add(cr.getSegundos());
                 }
                 linear_op.requestLayout();
                 scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
@@ -245,17 +262,17 @@ public class cronoActivity extends AppCompatActivity {
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AtividadeRepository repo = new AtividadeRepository(context);
+                dataFim.setEnabled(false);
+                obs.setEnabled(false);
+                nomeAtv.setEnabled(false);
+                btnProximo.setEnabled(false);
+                AtividadeRepository repo = new AtividadeRepository(cronoActivity.this);
                 List<Integer> operacoes = new ArrayList<>();
 
-                // Verifica se listaOperacoes e idsOp não estão vazios
-                if (idsOp != null && !idsOp.isEmpty()) {
-                    for (int indice : listaOperacoes) {
-                        if (indice >= 0 && indice < idsOp.size()) {
-                            operacoes.add(idsOp.get(indice));
-                        } else {
-                            operacoes.add(1); // Valor padrão para erros (pode ser tratado depois)
-                        }
+                for (Spinner spOp : spinersOp) {
+                    Operacao operacaoSelecionada = (Operacao) spOp.getSelectedItem();
+                    if (operacaoSelecionada != null) {
+                        operacoes.add(operacaoSelecionada.getId());
                     }
                 }
                 int total_seg = (cr.getSegundos_total()) / 1000;
@@ -264,7 +281,11 @@ public class cronoActivity extends AppCompatActivity {
                 String dataF = dataFim.getText().toString().trim();
 
                 if (nome.isEmpty() || dataIni.isEmpty() || dataF.isEmpty() || post <= 0 || maq <= 0) {
-                    Toast.makeText(context, "Preencha todos os campos da atividade!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(cronoActivity.this, "Preencha todos os campos da atividade!", Toast.LENGTH_SHORT).show();
+                    dataFim.setEnabled(true);
+                    obs.setEnabled(true);
+                    nomeAtv.setEnabled(true);
+                    btnProximo.setEnabled(true);
                     return;
                 }
 
@@ -286,6 +307,25 @@ public class cronoActivity extends AppCompatActivity {
         });
 
     }
+    private void showDateTimePicker(EditText editText) {
+        Calendar newCalendar = Calendar.getInstance();
 
+        // Primeiro, exibe o DatePickerDialog
+        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            newCalendar.set(Calendar.YEAR, year);
+            newCalendar.set(Calendar.MONTH, month);
+            newCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            // Após escolher a data, exibe o TimePickerDialog
+            new TimePickerDialog(this, (timeView, hourOfDay, minute) -> {
+                newCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                newCalendar.set(Calendar.MINUTE, minute);
+
+                // Formata e define o texto no EditText
+                editText.setText(dateTimeFormat.format(newCalendar.getTime()));
+            }, newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), true).show();
+
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
 
 }

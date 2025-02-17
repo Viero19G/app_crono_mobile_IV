@@ -91,7 +91,7 @@ public class createOp extends AppCompatActivity {
             id_class = classificacao.get(0).getId();
         }
 
-        ArrayAdapter<Classificacao> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, classificacao);
+        ArrayAdapter<Classificacao> adapter = new ArrayAdapter<>(createOp.this, android.R.layout.simple_spinner_item, classificacao);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 

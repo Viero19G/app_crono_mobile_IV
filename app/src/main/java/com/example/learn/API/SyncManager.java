@@ -62,8 +62,8 @@ public class SyncManager {
         progressBar.setProgress(0);
 
         // Chamar sincronizações
-        postoRepository.sincronizarPostos(() -> onSyncComplete(dialog, progressBar, txtProgress));
         classificacaoRepository.sincronizarClassificacao(() -> onSyncComplete(dialog, progressBar, txtProgress));
+        postoRepository.sincronizarPostos(() -> onSyncComplete(dialog, progressBar, txtProgress));
         operacaoRepository.sincronizarOperacoes(() -> onSyncComplete(dialog, progressBar, txtProgress));
         maquinaRepository.sincronizarMaquinas(() -> onSyncComplete(dialog, progressBar, txtProgress));
     }

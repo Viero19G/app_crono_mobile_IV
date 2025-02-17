@@ -46,7 +46,7 @@ public class createPosto extends AppCompatActivity {
                // ApiService api = new ApiService();
                 dbHelp.addPosto(nome_posto.getText().toString().trim(),
                         desc_posto.getText().toString().trim());
-                PostoRepository repo = new PostoRepository(context);
+                PostoRepository repo = new PostoRepository(createPosto.this);
                 PostoTrabalho novaPosto = new PostoTrabalho(nome_posto.getText().toString(), desc_posto.getText().toString());
                 repo.criarPostoComReenvio(novaPosto, 1);
             }
